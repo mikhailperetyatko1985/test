@@ -11,9 +11,13 @@ class Master extends Model
 {
     use HasFactory;
 
+    public const string F_ID = 'id';
+    public const string F_NAME = 'name';
+    public const string F_REFERRAL_CODE = 'referral_code';
+
     protected $fillable = [
-        'name',
-        'referral_code',
+        self::F_NAME,
+        self::F_REFERRAL_CODE,
     ];
 
     public function payments(): HasMany
@@ -23,12 +27,12 @@ class Master extends Model
 
     public function referrals(): HasMany
     {
-        return $this->hasMany(Referral::class, 'referrer_master_id');
+        return $this->hasMany(Referral::class, Referral::F_REFERRER_MASTER_ID);
     }
 
     public function referralEarnings(): HasMany
     {
-        return $this->hasMany(ReferralEarning::class, 'referrer_master_id');
+        return $this->hasMany(ReferralEarning::class, ReferralEarning::F_REFERRER_MASTER_ID);
     }
 
     public function isPaid(): bool

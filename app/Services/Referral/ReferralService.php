@@ -2,6 +2,8 @@
 
 namespace App\Services\Referral;
 
+use App\Enums\ReferralProgram;
+use App\Enums\ReferralStatus;
 use App\Models\Master;
 use App\Models\Referral;
 
@@ -9,20 +11,20 @@ class ReferralService
 {
     public function registerReferral(Master $referred, string $code): ?Referral
     {
-        $referrer = Master::where('referral_code', $code)->first();
+        $referrer = Master::where(Master::F_REFERRAL_CODE, $code)->first();
 
-        if (empty($referrer) || $referrer->id === $referred->id) {
+        if (empty($referrer) || $referrer->{Master::F_ID} === $referred->{Master::F_ID}) {
             return null;
         }
 
         return Referral::firstOrCreate(
             [
-                'referred_master_id' => $referred->id,
+                Referral::F_REFERRED_MASTER_ID => $referred->{Master::F_ID},
             ],
             [
-                'referrer_master_id' => $referrer->id,
-                'program' => Referral::PROGRAM_MASTER_INVITE,
-                'status' => Referral::STATUS_PENDING,
+                Referral::F_REFERRER_MASTER_ID => $referrer->{Master::F_ID},
+                Referral::F_PROGRAM => ReferralProgram::MasterInvite,
+                Referral::F_STATUS => ReferralStatus::Pending,
             ]
         );
     }

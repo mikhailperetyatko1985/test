@@ -2,6 +2,8 @@
 
 namespace Database\Seeders;
 
+use App\Enums\PaymentType;
+use App\Enums\ReferralStatus;
 use App\Models\Master;
 use App\Models\Payment;
 use App\Models\Referral;
@@ -20,37 +22,37 @@ class DatabaseSeeder extends Seeder
 {
     public function run(): void
     {
-        $masha = Master::create(['name' => 'Маша', 'referral_code' => 'MASHA10']);
-        $lena = Master::create(['name' => 'Лена', 'referral_code' => 'LENA77']);
+        $masha = Master::create([Master::F_NAME => 'Маша', Master::F_REFERRAL_CODE => 'MASHA10']);
+        $lena = Master::create([Master::F_NAME => 'Лена', Master::F_REFERRAL_CODE => 'LENA77']);
 
-        $ira = Master::create(['name' => 'Ира', 'referral_code' => 'IRA31']);
-        $olya = Master::create(['name' => 'Оля', 'referral_code' => 'OLYA22']);
-        $katya = Master::create(['name' => 'Катя', 'referral_code' => 'KATYA05']);
-        $dasha = Master::create(['name' => 'Даша', 'referral_code' => 'DASHA64']);
+        $ira = Master::create([Master::F_NAME => 'Ира', Master::F_REFERRAL_CODE => 'IRA31']);
+        $olya = Master::create([Master::F_NAME => 'Оля', Master::F_REFERRAL_CODE => 'OLYA22']);
+        $katya = Master::create([Master::F_NAME => 'Катя', Master::F_REFERRAL_CODE => 'KATYA05']);
+        $dasha = Master::create([Master::F_NAME => 'Даша', Master::F_REFERRAL_CODE => 'DASHA64']);
 
         foreach ([$ira, $olya, $katya, $dasha] as $referred) {
             Referral::create([
-                'referrer_master_id' => $masha->id,
-                'referred_master_id' => $referred->id,
-                'status' => Referral::STATUS_PENDING,
+                Referral::F_REFERRER_MASTER_ID => $masha->{Master::F_ID},
+                Referral::F_REFERRED_MASTER_ID => $referred->{Master::F_ID},
+                Referral::F_STATUS => ReferralStatus::Pending,
             ]);
         }
 
         // Ира: оплатила картой, потом продлила.
-        Payment::create(['master_id' => $ira->id, 'amount' => 3000, 'type' => Payment::TYPE_CARD]);
-        Payment::create(['master_id' => $ira->id, 'amount' => 3000, 'type' => Payment::TYPE_CARD]);
+        Payment::create([Payment::F_MASTER_ID => $ira->{Master::F_ID}, Payment::F_AMOUNT => 3000, Payment::F_TYPE => PaymentType::Card]);
+        Payment::create([Payment::F_MASTER_ID => $ira->{Master::F_ID}, Payment::F_AMOUNT => 3000, Payment::F_TYPE => PaymentType::Card]);
 
         // Оля: сидит на промокоде, денег не платила.
-        Payment::create(['master_id' => $olya->id, 'amount' => 0, 'type' => Payment::TYPE_PROMO]);
+        Payment::create([Payment::F_MASTER_ID => $olya->{Master::F_ID}, Payment::F_AMOUNT => 0, Payment::F_TYPE => PaymentType::Promo]);
 
         // Катя: пробный период, платежей нет.
-        Payment::create(['master_id' => $katya->id, 'amount' => 0, 'type' => Payment::TYPE_TRIAL]);
+        Payment::create([Payment::F_MASTER_ID => $katya->{Master::F_ID}, Payment::F_AMOUNT => 0, Payment::F_TYPE => PaymentType::Trial]);
 
         // Даша: неудачное списание на 0, следом настоящая оплата.
-        Payment::create(['master_id' => $dasha->id, 'amount' => 0, 'type' => Payment::TYPE_CARD]);
-        Payment::create(['master_id' => $dasha->id, 'amount' => 2000, 'type' => Payment::TYPE_CARD]);
+        Payment::create([Payment::F_MASTER_ID => $dasha->{Master::F_ID}, Payment::F_AMOUNT => 0, Payment::F_TYPE => PaymentType::Card]);
+        Payment::create([Payment::F_MASTER_ID => $dasha->{Master::F_ID}, Payment::F_AMOUNT => 2000, Payment::F_TYPE => PaymentType::Card]);
 
         // Лена пришла без реферального кода.
-        Payment::create(['master_id' => $lena->id, 'amount' => 3000, 'type' => Payment::TYPE_SBP]);
+        Payment::create([Payment::F_MASTER_ID => $lena->{Master::F_ID}, Payment::F_AMOUNT => 3000, Payment::F_TYPE => PaymentType::Sbp]);
     }
 }

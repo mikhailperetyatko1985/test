@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\PaymentType;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -11,19 +12,20 @@ class Payment extends Model
 {
     use HasFactory;
 
-    public const TYPE_CARD = 'card';
-    public const TYPE_SBP = 'sbp';
-    public const TYPE_PROMO = 'promo';
-    public const TYPE_TRIAL = 'trial';
+    public const string F_ID = 'id';
+    public const string F_MASTER_ID = 'master_id';
+    public const string F_AMOUNT = 'amount';
+    public const string F_TYPE = 'type';
 
     protected $fillable = [
-        'master_id',
-        'amount',
-        'type',
+        self::F_MASTER_ID,
+        self::F_AMOUNT,
+        self::F_TYPE,
     ];
 
     protected $casts = [
-        'amount' => 'integer',
+        self::F_AMOUNT => 'integer',
+        self::F_TYPE => PaymentType::class,
     ];
 
     public function master(): BelongsTo
@@ -33,12 +35,12 @@ class Payment extends Model
 
     public static function isMonetary(self $payment): bool
     {
-        return in_array($payment->type, [self::TYPE_CARD, self::TYPE_SBP], true)
-            && $payment->amount > 0;
+        return in_array($payment->{self::F_TYPE}, [PaymentType::Card, PaymentType::Sbp], true)
+            && $payment->{self::F_AMOUNT} > 0;
     }
 
     public function scopeMonetary(Builder $query): Builder
     {
-        return $query->whereIn('type', [self::TYPE_CARD, self::TYPE_SBP]);
+        return $query->whereIn(self::F_TYPE, [PaymentType::Card, PaymentType::Sbp]);
     }
 }

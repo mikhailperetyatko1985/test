@@ -2,11 +2,13 @@
 
 namespace App\Providers;
 
+use App\Contracts\MasterRepositoryInterface;
 use App\Contracts\PaymentRepositoryInterface;
 use App\Contracts\ReferralEarningRepositoryInterface;
 use App\Contracts\ReferralRepositoryInterface;
 use App\Models\Payment;
 use App\Observers\PaymentObserver;
+use App\Repositories\Eloquent\MasterRepository;
 use App\Repositories\Eloquent\PaymentRepository;
 use App\Repositories\Eloquent\ReferralEarningRepository;
 use App\Repositories\Eloquent\ReferralRepository;
@@ -16,6 +18,7 @@ class AppServiceProvider extends ServiceProvider
 {
     public function register(): void
     {
+        $this->app->bind(MasterRepositoryInterface::class, MasterRepository::class);
         $this->app->bind(ReferralRepositoryInterface::class, ReferralRepository::class);
         $this->app->bind(PaymentRepositoryInterface::class, PaymentRepository::class);
         $this->app->bind(ReferralEarningRepositoryInterface::class, ReferralEarningRepository::class);

@@ -2,35 +2,30 @@
 
 namespace App\Services\Referral;
 
+use App\Contracts\MasterRepositoryInterface;
 use App\Contracts\ReferralRepositoryInterface;
-use App\Enums\ReferralProgram;
-use App\Enums\ReferralStatus;
 use App\Models\Master;
 use App\Models\Referral;
 
 class ReferralService
 {
-    public function __construct(private ReferralRepositoryInterface $referrals)
-    {
+    public function __construct(
+        private ReferralRepositoryInterface $referrals,
+        private MasterRepositoryInterface $masters,
+    ) {
     }
 
     public function registerReferral(Master $referred, string $code): ?Referral
     {
-        $referrer = Master::where(Master::F_REFERRAL_CODE, $code)->first();
+        $referrer = $this->masters->findByReferralCode($code);
 
         if (empty($referrer) || $referrer->{Master::F_ID} === $referred->{Master::F_ID}) {
             return null;
         }
 
-        return Referral::firstOrCreate(
-            [
-                Referral::F_REFERRED_MASTER_ID => $referred->{Master::F_ID},
-            ],
-            [
-                Referral::F_REFERRER_MASTER_ID => $referrer->{Master::F_ID},
-                Referral::F_PROGRAM => ReferralProgram::MasterInvite,
-                Referral::F_STATUS => ReferralStatus::Pending,
-            ]
+        return $this->referrals->attachToMaster(
+            $referred->{Master::F_ID},
+            $referrer->{Master::F_ID},
         );
     }
 

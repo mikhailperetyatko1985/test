@@ -2,20 +2,17 @@
 
 namespace App\Repositories\Eloquent;
 
-use App\Contracts\ReferralRepositoryInterface;
+use App\Contracts\ReferralWriteRepositoryInterface;
 use App\Enums\ReferralProgram;
 use App\Enums\ReferralStatus;
 use App\Models\Referral;
 
-class ReferralRepository implements ReferralRepositoryInterface
+/**
+ * Запись по referrals. Чтения через репозиторий чтения здесь не требуется:
+ * firstOrCreate сам выполняет точечную выборку до вставки.
+ */
+class ReferralWriteRepository implements ReferralWriteRepositoryInterface
 {
-    public function findPendingByReferredMasterId(int $referredMasterId): ?Referral
-    {
-        return Referral::where(Referral::F_REFERRED_MASTER_ID, $referredMasterId)
-            ->where(Referral::F_STATUS, ReferralStatus::Pending)
-            ->first();
-    }
-
     public function attachToMaster(
         int $referredMasterId,
         int $referrerMasterId,

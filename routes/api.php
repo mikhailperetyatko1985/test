@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\ReferralController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -12,12 +13,10 @@ use Illuminate\Support\Facades\Route;
 |
 |     $master = $request->attributes->get('current_master');
 |
-| Здесь нужно написать три роута — см. README.md.
-|
 */
 
 Route::get('/ping', fn () => ['ok' => true]);
 
-// TODO: POST /api/referrals/attach
-// TODO: GET  /api/referrals/my
-// TODO: GET  /api/referrals/earnings
+Route::post('/referrals/attach', [ReferralController::class, 'attach']);
+Route::get('/referrals/my', [ReferralController::class, 'my']);
+Route::get('/referrals/earnings', [ReferralController::class, 'earnings']);

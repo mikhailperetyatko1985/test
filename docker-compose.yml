@@ -12,3 +12,11 @@ services:
       # старте копирует его сюда (на хост), чтобы IDE видела зависимости на диске.
       - ./:/app
     restart: unless-stopped
+    depends_on:
+      - memcached
+
+  # Тегированный кеш для /api/referrals/earnings (CACHE_STORE=memcached в .env).
+  # Порты наружу не публикуем — только внутренняя сеть compose.
+  memcached:
+    image: memcached:alpine
+    restart: unless-stopped

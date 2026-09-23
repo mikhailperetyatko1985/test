@@ -2,7 +2,7 @@
 
 namespace App\Services\Referral;
 
-use App\Contracts\ReferralEarningRepositoryInterface;
+use App\Contracts\ReferralEarningWriteRepositoryInterface;
 use App\DTOs\ReferralEarningData;
 use App\Enums\ReferralEarningStatus;
 use App\Models\Payment;
@@ -12,7 +12,7 @@ use App\Models\ReferralEarning;
 class ReferralEarningService
 {
     public function __construct(
-        private ReferralEarningRepositoryInterface $earnings,
+        private ReferralEarningWriteRepositoryInterface $earnings,
         private ReferralService $referrals,
     ) {
     }

@@ -6,13 +6,11 @@ use App\Enums\ReferralProgram;
 use App\Enums\ReferralStatus;
 use App\Models\Referral;
 
-interface ReferralRepositoryInterface
+/**
+ * Запись по referrals. Чтение отсутствует — см. ReferralReadRepositoryInterface.
+ */
+interface ReferralWriteRepositoryInterface
 {
-    /**
-     * Ищет ожидающий (Pending) реферал по идентификатору приведённого мастера.
-     */
-    public function findPendingByReferredMasterId(int $referredMasterId): ?Referral;
-
     /**
      * Привязывает реферала к мастеру: создаёт запись, если она ещё не существует.
      */

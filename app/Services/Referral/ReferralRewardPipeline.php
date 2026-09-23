@@ -2,6 +2,7 @@
 
 namespace App\Services\Referral;
 
+use App\Contracts\ReferralReadRepositoryInterface;
 use App\Enums\ReferralStatus;
 use App\Models\Payment;
 use App\Models\Referral;
@@ -10,7 +11,7 @@ use Illuminate\Support\Facades\DB;
 class ReferralRewardPipeline
 {
     public function __construct(
-        private ReferralService $referrals,
+        private ReferralReadRepositoryInterface $referrals,
         private PaymentService $payments,
         private ReferralEarningService $earnings,
     ) {

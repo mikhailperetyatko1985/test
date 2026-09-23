@@ -2,11 +2,11 @@
 
 namespace App\Repositories\Eloquent;
 
-use App\Contracts\ReferralEarningRepositoryInterface;
+use App\Contracts\ReferralEarningWriteRepositoryInterface;
 use App\DTOs\ReferralEarningData;
 use App\Models\ReferralEarning;
 
-class ReferralEarningRepository implements ReferralEarningRepositoryInterface
+class ReferralEarningWriteRepository implements ReferralEarningWriteRepositoryInterface
 {
     public function create(ReferralEarningData $data): ReferralEarning
     {

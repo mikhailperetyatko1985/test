@@ -2,6 +2,7 @@
 
 namespace App\Services\Referral;
 
+use App\Contracts\ReferralRepositoryInterface;
 use App\Enums\ReferralProgram;
 use App\Enums\ReferralStatus;
 use App\Models\Master;
@@ -9,6 +10,10 @@ use App\Models\Referral;
 
 class ReferralService
 {
+    public function __construct(private ReferralRepositoryInterface $referrals)
+    {
+    }
+
     public function registerReferral(Master $referred, string $code): ?Referral
     {
         $referrer = Master::where(Master::F_REFERRAL_CODE, $code)->first();
@@ -27,6 +32,11 @@ class ReferralService
                 Referral::F_STATUS => ReferralStatus::Pending,
             ]
         );
+    }
+
+    public function findPendingByReferredMasterId(int $referredMasterId): ?Referral
+    {
+        return $this->referrals->findPendingByReferredMasterId($referredMasterId);
     }
 
     public function rewardAmount(int $paymentAmount): int

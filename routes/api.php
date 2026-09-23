@@ -17,6 +17,8 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/ping', fn () => ['ok' => true]);
 
-Route::post('/referrals/attach', [ReferralController::class, 'attach']);
-Route::get('/referrals/my', [ReferralController::class, 'my']);
-Route::get('/referrals/earnings', [ReferralController::class, 'earnings']);
+Route::prefix('referrals')->group(function () {
+    Route::post('/attach', [ReferralController::class, 'attach']);
+    Route::get('/my', [ReferralController::class, 'my']);
+    Route::get('/earnings', [ReferralController::class, 'earnings']);
+});

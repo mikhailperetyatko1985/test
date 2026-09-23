@@ -1,0 +1,22 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+    image: mastapp-test-task
+    ports:
+      - "${HOST_PORT:-8001}:8000"   # порт на хосте берётся из .env (HOST_PORT)
+    volumes:
+      # Исходники с хоста — правки кода видны сразу, без пересборки.
+      # vendor/ собирается при build в /opt/vendor образа; entrypoint при первом
+      # старте копирует его сюда (на хост), чтобы IDE видела зависимости на диске.
+      - ./:/app
+    restart: unless-stopped
+    depends_on:
+      - memcached
+
+  # Тегированный кеш для /api/referrals/earnings (CACHE_STORE=memcached в .env).
+  # Порты наружу не публикуем — только внутренняя сеть compose.
+  memcached:
+    image: memcached:alpine
+    restart: unless-stopped

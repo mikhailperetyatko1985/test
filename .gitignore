@@ -3,3 +3,4 @@
 .env
 .phpunit.result.cache
 /database/database.sqlite
+.idea/
